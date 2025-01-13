@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import Link from "next/link";
 
 const Home = () => {
@@ -55,14 +56,7 @@ const Home = () => {
           </Link>
         </div>
       </main>
-      <footer className="w-full bg-gray-800 text-white py-4">
-        <div className="container mx-auto text-center">
-          <p>
-            © {new Date().getFullYear()} Hospital Food Delivery Management
-            System. All rights reserved.
-          </p>
-        </div>
-      </footer>
+      <Footer/>
     </div>
   );
 };
