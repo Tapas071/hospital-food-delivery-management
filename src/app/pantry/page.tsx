@@ -56,6 +56,32 @@ const PantryPage = () => {
               </p>
             </div>
           </Link>
+          <Link
+            href="/pantry/manage-dishes"
+            className="bg-white p-6 shadow-md rounded-lg hover:shadow-lg transition"
+          >
+            <div>
+              <h3 className="text-xl font-bold text-purple-600 mb-4">
+                Manage Dishes
+              </h3>
+              <p className="text-gray-600">
+                Create, update, and organize pantry dishes.
+              </p>
+            </div>
+          </Link>
+          <Link
+            href="/pantry/manage-ingredients"
+            className="bg-white p-6 shadow-md rounded-lg hover:shadow-lg transition"
+          >
+            <div>
+              <h3 className="text-xl font-bold text-red-600 mb-4">
+                Manage Ingredients
+              </h3>
+              <p className="text-gray-600">
+                Add, update, and manage pantry ingredients inventory.
+              </p>
+            </div>
+          </Link>
         </div>
       </main>
       <Footer />
@@ -64,4 +90,3 @@ const PantryPage = () => {
 };
 
 export default PantryPage;
-

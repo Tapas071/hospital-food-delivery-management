@@ -18,8 +18,6 @@ export async function POST(request: NextRequest) {
     morningMeal,
     eveningMeal,
     nightMeal,
-    ingredients,
-    instructions,
   } = data;
 
   // Validate the patient ID
@@ -32,10 +30,9 @@ export async function POST(request: NextRequest) {
     patient,
     morningMeal,
     eveningMeal,
-    nightMeal,
-    ingredients,
-    instructions,
+    nightMeal
   });
+
 
   try {
     await dietChart.save();

@@ -18,35 +18,7 @@ const DietChartSchema = new mongoose.Schema(
     nightMeal: {
       type: String,
       required: true,
-    },
-    ingredients: {
-      morning: {
-        type: [String], // Array of ingredients for morning meal
-        required: true,
-      },
-      evening: {
-        type: [String], // Array of ingredients for evening meal
-        required: true,
-      },
-      night: {
-        type: [String], // Array of ingredients for night meal
-        required: true,
-      },
-    },
-    instructions: {
-      morning: {
-        type: String,
-        required: true,
-      },
-      evening: {
-        type: String,
-        required: true,
-      },
-      night: {
-        type: String,
-        required: true,
-      },
-    },
+    }
   },
   { timestamps: true }
 );

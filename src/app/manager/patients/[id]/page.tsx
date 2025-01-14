@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Patient, DietChart } from "@/types"; // Assuming DietChart type is imported
+import { Patient, DietChart, Meal } from "@/types"; // Assuming DietChart type is imported
 
 const PatientDetailsPage = () => {
   const [patient, setPatient] = useState<Patient | null>(null);
@@ -18,21 +18,22 @@ const PatientDetailsPage = () => {
     updatedAt: new Date().toISOString(),
     morningMeal: "",
     eveningMeal: "",
-    nightMeal: "",
-    ingredients: {
-      morning: [],
-      evening: [],
-      night: [],
-    },
-    instructions: {
-      morning: "",
-      evening: "",
-      night: "",
-    },
+    nightMeal: ""
   }); // For adding new diet chart
+  const [meals, setMeals] = useState<Meal[]>([]);
 
+    const fetchedMeals = async () => {
+    try {
+      const response = await axios.get("/api/manager/meal");
+      const meals = response.data.data;
+      setMeals(response.data.data);
+    } catch (error) {
+      console.error("Error fetching meals:", error);
+    }
+    };
   useEffect(() => {
     setIsMounted(true);
+    fetchedMeals();
 
     const url = window.location.href; // Get the current URL
     const id = new URL(url).pathname.split("/").pop(); // Extract patient ID from URL
@@ -66,13 +67,7 @@ const PatientDetailsPage = () => {
     if (
       !newDietChart.morningMeal ||
       !newDietChart.eveningMeal ||
-      !newDietChart.nightMeal ||
-      !newDietChart.ingredients.morning.length ||
-      !newDietChart.ingredients.evening.length ||
-      !newDietChart.ingredients.night.length ||
-      !newDietChart.instructions.morning ||
-      !newDietChart.instructions.evening ||
-      !newDietChart.instructions.night
+      !newDietChart.nightMeal 
     ) {
       alert("Please fill in all fields");
       return;
@@ -91,17 +86,7 @@ const PatientDetailsPage = () => {
               updatedAt: new Date().toISOString(),
               morningMeal: "",
               eveningMeal: "",
-              nightMeal: "",
-              ingredients: {
-                morning: [],
-                evening: [],
-                night: [],
-              },
-              instructions: {
-                morning: "",
-                evening: "",
-                night: "",
-              },
+              nightMeal: ""
             }); // Reset the form
     } catch (error) {
       console.error("Error adding diet chart:", error);
@@ -195,16 +180,13 @@ const PatientDetailsPage = () => {
           <h2 className="text-2xl font-bold text-blue-600 mb-4">Diet Chart</h2>
           <div>
             <h3>Morning Meal: {dietChart.morningMeal}</h3>
-            <p>Ingredients: {dietChart.ingredients.morning.join(", ")}</p>
-            <p>Instructions: {dietChart.instructions.morning}</p>
+            
 
             <h3>Evening Meal: {dietChart.eveningMeal}</h3>
-            <p>Ingredients: {dietChart.ingredients.evening.join(", ")}</p>
-            <p>Instructions: {dietChart.instructions.evening}</p>
+            
 
             <h3>Night Meal: {dietChart.nightMeal}</h3>
-            <p>Ingredients: {dietChart.ingredients.night.join(", ")}</p>
-            <p>Instructions: {dietChart.instructions.night}</p>
+            
 
             <button
               className="bg-blue-600 text-white py-2 px-4 rounded-md mt-4"
@@ -223,16 +205,14 @@ const PatientDetailsPage = () => {
             className="bg-blue-600 text-white py-2 px-4 rounded-md"
             onClick={() =>
               setEditingDietChart({
-                              _id: "",
-                              patient: "",
-                              createdAt: new Date().toISOString(),
-                              updatedAt: new Date().toISOString(),
-                              morningMeal: "",
-                              eveningMeal: "",
-                              nightMeal: "",
-                              ingredients: { morning: [], evening: [], night: [] },
-                              instructions: { morning: "", evening: "", night: "" },
-                            })
+                _id: "",
+                patient: "",
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                morningMeal: "",
+                eveningMeal: "",
+                nightMeal: "",
+              })
             }
           >
             Add Diet Chart
@@ -247,103 +227,121 @@ const PatientDetailsPage = () => {
             {editingDietChart ? "Edit Diet Chart" : "Add Diet Chart"}
           </h2>
           <div className="grid grid-cols-2 gap-6">
+            {/* Morning Meal */}
             <div className="flex flex-col">
               <label className="font-semibold text-blue-600">
                 Morning Meal
               </label>
-              <input
-                type="text"
+              <select
                 className="border border-gray-300 p-2 rounded"
                 value={
-                  editingDietChart?.morningMeal || newDietChart.morningMeal
+                  editingDietChart?.morningMeal ||
+                  newDietChart.morningMeal ||
+                  ""
                 }
-                onChange={(e) =>
+                onChange={(e) => {
+                  const selectedMeal = e.target.value;
                   editingDietChart
                     ? setEditingDietChart({
                         ...editingDietChart,
-                        morningMeal: e.target.value,
+                        morningMeal: selectedMeal,
                       })
                     : setNewDietChart({
                         ...newDietChart,
-                        morningMeal: e.target.value,
-                      })
-                }
-              />
+                        morningMeal: selectedMeal,
+                      });
+                }}
+              >
+                <option value="">Select a Morning Meal</option>
+                {meals.map((meal, index) => {
+                  if (meal.mealType === "Morning") {
+                    return (
+                      <option key={index} value={meal.mealName}>
+                        {meal.mealName}
+                      </option>
+                    );
+                  }
+                  return null;
+                })}
+              </select>
             </div>
+
+            {/* Evening Meal */}
             <div className="flex flex-col">
               <label className="font-semibold text-blue-600">
                 Evening Meal
               </label>
-              <input
-                type="text"
+              <select
                 className="border border-gray-300 p-2 rounded"
                 value={
-                  editingDietChart?.eveningMeal || newDietChart.eveningMeal
+                  editingDietChart?.eveningMeal ||
+                  newDietChart.eveningMeal ||
+                  ""
                 }
-                onChange={(e) =>
+                onChange={(e) => {
+                    console.log(e.target.value);
+                  const selectedMeal = e.target.value;
                   editingDietChart
                     ? setEditingDietChart({
                         ...editingDietChart,
-                        eveningMeal: e.target.value,
+                        eveningMeal: selectedMeal,
                       })
                     : setNewDietChart({
                         ...newDietChart,
-                        eveningMeal: e.target.value,
-                      })
-                }
-              />
+                        eveningMeal: selectedMeal,
+                      });
+                }}
+              >
+                <option value="">Select an Evening Meal</option>
+                {meals.map((meal, index) => {
+                  if (meal.mealType === "Evening") {
+                    return (
+                      <option key={index} value={meal.mealName}>
+                        {meal.mealName}
+                      </option>
+                    );
+                  }
+                  return null;
+                })}
+              </select>
             </div>
+
+            {/* Night Meal */}
             <div className="flex flex-col">
               <label className="font-semibold text-blue-600">Night Meal</label>
-              <input
-                type="text"
-                className="border border-gray-300 p-2 rounded"
-                value={editingDietChart?.nightMeal || newDietChart.nightMeal}
-                onChange={(e) =>
-                  editingDietChart
-                    ? setEditingDietChart({
-                        ...editingDietChart,
-                        nightMeal: e.target.value,
-                      })
-                    : setNewDietChart({
-                        ...newDietChart,
-                        nightMeal: e.target.value,
-                      })
-                }
-              />
-            </div>
-            {/* Ingredients and Instructions */}
-            <div className="flex flex-col">
-              <label className="font-semibold text-blue-600">
-                Morning Ingredients
-              </label>
-              <input
-                type="text"
+              <select
                 className="border border-gray-300 p-2 rounded"
                 value={
-                  editingDietChart?.ingredients.morning.join(", ") ||
-                  newDietChart.ingredients.morning.join(", ")
+                  editingDietChart?.nightMeal || newDietChart.nightMeal || ""
                 }
-                onChange={(e) =>
+                onChange={(e) => {
+                  const selectedMeal = e.target.value;
                   editingDietChart
                     ? setEditingDietChart({
                         ...editingDietChart,
-                        ingredients: {
-                          ...editingDietChart.ingredients,
-                          morning: e.target.value.split(", "),
-                        },
+                        nightMeal: selectedMeal,
                       })
                     : setNewDietChart({
                         ...newDietChart,
-                        ingredients: {
-                          ...newDietChart.ingredients,
-                          morning: e.target.value.split(", "),
-                        },
-                      })
-                }
-              />
+                        nightMeal: selectedMeal,
+                      });
+                }}
+              >
+                <option value="">Select a Night Meal</option>
+                {meals.map((meal, index) => {
+                  if (meal.mealType === "Dinner") {
+                    return (
+                      <option key={index} value={meal.mealName}>
+                        {meal.mealName}
+                      </option>
+                    );
+                  }
+                  return null;
+                })}
+              </select>
             </div>
-            {/* Repeat similar blocks for evening and night meal ingredients, and instructions */}
+
+            {/* Submit Button */}
             <div className="flex justify-end mt-4">
               <button
                 className="bg-blue-600 text-white py-2 px-4 rounded-md"
