@@ -30,6 +30,7 @@ const Home = () => {
           </nav>
         </div>
       </header>
+
       <main className="flex flex-col items-center justify-center flex-1 text-center px-4">
         <h2 className="text-4xl font-extrabold text-gray-800 mb-4">
           Welcome to the Hospital Food Delivery Management System
@@ -38,7 +39,8 @@ const Home = () => {
           Efficiently manage patient diet plans, pantry tasks, and food
           delivery.
         </p>
-        <div className="space-x-4">
+
+        <div className="space-x-4 mb-6">
           <Link href="/manager">
             <div className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-blue-700">
               Manager Portal
@@ -55,8 +57,16 @@ const Home = () => {
             </div>
           </Link>
         </div>
+
+        {/* Login Button */}
+        <Link href="/auth/login">
+          <div className="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow-md hover:bg-indigo-700">
+            Login
+          </div>
+        </Link>
       </main>
-      <Footer/>
+
+      <Footer />
     </div>
   );
 };
