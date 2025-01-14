@@ -8,7 +8,8 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   await dbConnect();
-  const { id } = params;
+ const url = new URL(request.url);
+ const id = url.searchParams.get("id");
 
   try {
     const patient = await Patient.findById(id);
