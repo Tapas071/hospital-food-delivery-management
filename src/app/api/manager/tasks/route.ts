@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "../../../../lib/dbConnect";
 import Task from "../../../../models/Task";
-import Pantry from "../../../../models/Pantry";
+import Pantry from "../../../../models/Staff";
 
 // Connect to the database
 const connectDB = async () => {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import dbConnect from "../../../../lib/dbConnect";
-import Pantry from "../../../../models/Pantry";
+import Pantry from "../../../../models/Staff";
 import Task from "../../../../models/Task";
 
 // Connect to the database
